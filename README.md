@@ -1,15 +1,15 @@
 # TaskPilot
 
-**An AI agent that manages tasks.** Users manage their to-do list by chatting. The agent decides which tool to call (add, list, update, delete, and assign for admins) and changes the data in the database. The task list sits next to the chat and highlights whatever the agent just changed.
+**Project B: an AI agent that manages tasks.** Users manage their to-do list by chatting. The agent decides which tool to call (add, list, update, delete, and assign for admins) and changes the data in the database. The task list sits next to the chat and highlights whatever the agent just changed.
 
 ## Live app and demo logins
 
 | | |
 |---|---|
-| Frontend | `<VERCEL URL>` |
-| Backend | `<RENDER URL>` (API docs at `<RENDER URL>/docs`) |
-| Admin | username `<admin>`, password `<password>` |
-| User | username `<user>`, password `<password>` |
+| Frontend | https://taskpilot-jet-omega.vercel.app |
+| Backend | https://taskpilot-bu0e.onrender.com (API docs at https://taskpilot-bu0e.onrender.com/docs) |
+| Admin | username `carol`, password `Carol123` |
+| User | username `nigesh`, password `Nigesh123` |
 
 The backend is on Render's free plan, so it sleeps after 15 minutes idle. The first request after that can take about a minute while it wakes up. The app shows a "can't reach the server, try again shortly" message in that case.
 
