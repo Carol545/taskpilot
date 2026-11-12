@@ -9,7 +9,7 @@
 | Frontend | https://taskpilot-jet-omega.vercel.app |
 | Backend | https://taskpilot-bu0e.onrender.com (API docs at https://taskpilot-bu0e.onrender.com/docs) |
 | Admin | username `Carol`, password `Carol123` |
-| User | username `Nigesh`, password `Nigesh123` |
+| User | username `Demo`, password `Demo1234` |
 
 The backend is on Render's free plan, so it sleeps after 15 minutes idle. The first request after that can take about a minute while it wakes up. The app shows a "can't reach the server, try again shortly" message in that case.
 
