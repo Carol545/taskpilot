@@ -1,6 +1,6 @@
 # TaskPilot
 
-**Project B: an AI agent that manages tasks.** Users manage their to-do list by chatting. The agent decides which tool to call (add, list, update, delete, and assign for admins) and changes the data in the database. The task list sits next to the chat and highlights whatever the agent just changed.
+**An AI agent that manages tasks.** Users manage their to-do list by chatting. The agent decides which tool to call (add, list, update, delete, and assign for admins) and changes the data in the database. The task list sits next to the chat and highlights whatever the agent just changed.
 
 ## Live app and demo logins
 
