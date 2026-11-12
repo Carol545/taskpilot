@@ -8,8 +8,8 @@
 |---|---|
 | Frontend | https://taskpilot-jet-omega.vercel.app |
 | Backend | https://taskpilot-bu0e.onrender.com (API docs at https://taskpilot-bu0e.onrender.com/docs) |
-| Admin | username `carol`, password `Carol123` |
-| User | username `nigesh`, password `Nigesh123` |
+| Admin | username `Carol`, password `Carol123` |
+| User | username `Nigesh`, password `Nigesh123` |
 
 The backend is on Render's free plan, so it sleeps after 15 minutes idle. The first request after that can take about a minute while it wakes up. The app shows a "can't reach the server, try again shortly" message in that case.
 
@@ -19,7 +19,7 @@ The backend is on Render's free plan, so it sleeps after 15 minutes idle. The fi
 |---|---|---|
 | Backend | FastAPI (required), SQLAlchemy 2 | SQLAlchemy keeps queries in Python and makes it easy to put the owner check inside every query. |
 | Database | Postgres on Neon | Free, hosted, survives restarts (Render's disk doesn't). |
-| LLM | Groq, `openai/gpt-oss-120b`, low reasoning effort | Free tier and OpenAI-style tool calling. In testing, `qwen/qwen3.8-27b` often wrote malformed tool calls; gpt-oss-120b is the largest chat model available on Groq's free tier. Low reasoning effort is enough for picking from five tools and keeps replies fast. Model and effort are env vars. |
+| LLM | Groq, `openai/gpt-oss-b`, low reasoning effort | Free tier and OpenAI-style tool calling. In testing, `qwen/qwen3.8-27b` often wrote malformed tool calls; gpt-oss-b is the largest chat model available on Groq's free tier. Low reasoning effort is enough for picking from five tools and keeps replies fast. Model and effort are env vars. |
 | Agent | Plain Python, no framework | The loop is about 100 lines, so a framework would add more to explain than it saves. |
 | Auth | Own JWT (PyJWT) + bcrypt | Full control over how roles are enforced, and every line is explainable. |
 | Validation | Pydantic | Validates both API requests and the LLM's tool arguments. Tool schemas are generated from the same models, so what the LLM sees and what gets validated can't drift apart. |
@@ -36,7 +36,7 @@ The backend is on Render's free plan, so it sleeps after 15 minutes idle. The fi
 4. When the LLM answers in plain text, **its claims are checked against what actually ran.** If the reply says a task was added, updated or deleted but no matching tool call succeeded in this turn, the model is told so and gets one chance to call the tool or correct itself. If it still doesn't match, the reply is replaced with an honest message and is not saved to history, so a false claim can't mislead later turns.
 5. It stops early if the model repeats a tool call that already failed, and after 6 rounds at most.
 
-**The model never does date maths.** It passes dates and times the way the user said them ("tomorrow", "friday", "17 june", "5pm", "9:30 am") and the backend converts them. A day and month with no year means the next time that date comes around. A time with no date means today if it's still ahead, otherwise tomorrow. A bare hour like "at 5" is rejected so the agent asks am or pm. Tool results include a ready-made label like "Thu 17 Jun 2027", which the model copies, because models often get weekdays wrong.
+**The model never does date maths.** It passes dates and times the way the user said them ("tomorrow", "friday", "17 june", "5pm", "9:30 am") and the backend converts them. A day and month with no year means the next time that date comes around. A time with no date means today if it's still ahead, otherwise tomorrow. A bare hour like "at 5" is rejected so the agent asks am or pm. Tool results include a ready-made label like "Thu 17 Jun 27", which the model copies, because models often get weekdays wrong.
 
 **The agent can't misremember what it did.** Each saved reply stores the tool calls that actually ran in that turn, and when old messages are sent back to the model they carry a note like "[actions actually taken: marked 'be polite' done (id 12)]". The prompt also lists recently completed tasks, not just pending ones. So if a user asks "why did you mark that done?", the model answers from the record instead of guessing, and it's told to admit mistakes and offer to undo them.
 
@@ -46,7 +46,7 @@ The backend is on Render's free plan, so it sleeps after 15 minutes idle. The fi
 
 This is what makes multi-step requests work. "Mark the report done and add a task to start the next one" becomes `list_tasks` (to find the report's id), then `update_task` plus `add_task`, then a reply. The UI shows which tools ran under each reply, and failed calls are marked.
 
-The LLM only proposes actions. The backend decides whether they're allowed (see below). LLM errors become friendly messages instead of crashes. Rate limits are reported immediately with the wait time Groq gives, rather than stalling the request for up to 20 seconds. If the model writes a malformed tool call, the error is sent back to it and it retries (up to twice). Feeding back the error matters: retrying the same messages at temperature 0 just reproduces the same broken call. Every rejected tool call is logged with its arguments.
+The LLM only proposes actions. The backend decides whether they're allowed (see below). LLM errors become friendly messages instead of crashes. Rate limits are reported immediately with the wait time Groq gives, rather than stalling the request for up to  seconds. If the model writes a malformed tool call, the error is sent back to it and it retries (up to twice). Feeding back the error matters: retrying the same messages at temperature 0 just reproduces the same broken call. Every rejected tool call is logged with its arguments.
 
 ## How login and roles work
 
